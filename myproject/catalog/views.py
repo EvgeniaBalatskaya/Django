@@ -1,8 +1,10 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from .models import Product
 
 def home(request):
-    return render(request, 'catalog/home.html')
+    latest_products = Product.objects.order_by('-created_at')[:5]
+    print(latest_products)  # временно вывод в консоль
+    return render(request, 'catalog/home.html', {'latest_products': latest_products})
 
 def contacts(request):
     if request.method == 'POST':
