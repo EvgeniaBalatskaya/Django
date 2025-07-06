@@ -1,10 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Product
+from django.core.paginator import Paginator
+
 
 def home(request):
-    latest_products = Product.objects.order_by('-created_at')[:5]
-    print(latest_products)  # временно вывод в консоль
-    return render(request, 'catalog/home.html', {'latest_products': latest_products})
+    product_list = Product.objects.all()
+    paginator = Paginator(product_list, 3)  # 3 товаров на страницу
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'catalog/home.html', {'page_obj': page_obj})
 
 def contacts(request):
     if request.method == 'POST':
@@ -15,3 +19,8 @@ def contacts(request):
         context = {'success': True, 'name': name}
         return render(request, 'catalog/contacts.html', context)
     return render(request, 'catalog/contacts.html')
+
+def product_detail(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    return render(request, 'catalog/product_detail.html', {'product': product})
+
