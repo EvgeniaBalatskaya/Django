@@ -1,0 +1,54 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}{{ object.title }}{% endblock %}
+
+{% block content %}
+<style>
+  .blog-img-rounded {
+    border-radius: 10px;
+  }
+
+  .blog-wrapper {
+    max-width: 80%;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .blog-content {
+    text-align: left;
+  }
+
+.blog-content img {
+  border-radius: 10px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1rem auto;
+}
+</style>
+
+<div class="blog-wrapper">
+  <h1>{{ object.title }}</h1>
+
+  {% if object.preview %}
+    <img src="{{ object.preview.url }}"
+         alt="превью {{ object.title }}"
+         class="w-100 blog-img-rounded mb-3">
+  {% endif %}
+
+  <div class="d-flex justify-content-between mb-3">
+    <small class="text-start">Просмотров: {{ object.views_count }}</small>
+    <small class="text-end text-muted">{{ object.created_at|date:"d.m.Y H:i" }}</small>
+  </div>
+
+
+  <div class="blog-content">
+    {{ object.content|safe }}
+  </div>
+
+  <div class="mt-4 d-flex justify-content-center gap-2 flex-wrap">
+    <a href="{% url 'blog:blog_list' %}" class="btn btn-outline-indigo mt-3">Назад к списку</a>
+  </div>
+</div>
+{% endblock %}
+
