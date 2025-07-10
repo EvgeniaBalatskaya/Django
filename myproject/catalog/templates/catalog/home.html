@@ -5,27 +5,59 @@
 {% block content %}
 <style>
 .pagination .page-link {
-  color: #5c6ac4;
-  border-color: #5c6ac4;
+  color: #6c757d;
+  border: 1px solid #6c757d;
+  background-color: transparent;
 }
 
 .pagination .page-item.active .page-link {
-  background-color: #5c6ac4;
-  border-color: #5c6ac4;
+  background-color: #6c757d;
   color: white;
+  border-color: #6c757d;
 }
 
 .pagination .page-link:hover {
-  background-color: #5c6ac4;
+  background-color: #6c757d;
   color: white;
-  border-color: #5c6ac4;
+  border-color: #6c757d;
 }
+
+.btn-custom {
+  color: #9370DB;
+  border: 2px solid #9370DB;
+  background-color: transparent;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  padding: 0.6rem 2.5rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+  user-select: none;
+  box-shadow: 0 2px 5px rgba(147, 112, 219, 0.2);
+}
+
+.btn-custom:hover,
+.btn-custom:focus {
+  background-color: #9370DB;
+  color: white;
+  text-decoration: none;
+  outline: none;
+  box-shadow: 0 4px 12px rgba(147, 112, 219, 0.5);
+  transform: scale(1.05);
+}
+
+.btn-custom:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 5px rgba(147, 112, 219, 0.3);
+}
+
 </style>
 
 <div class="container py-4">
   <div class="text-center mb-4">
     <h1 class="display-4">Skystore</h1>
-    <p class="lead">Skystore — отличный вариант хранения ваших плагинов и примеров кода, которые вы хотите продать</p>
+    <p class="lead">Skystore — современная платформа для удобной покупки и продажи товаров</p>
   </div>
 
   <div class="row">
@@ -40,8 +72,10 @@
             {% if product.image %}
             <img src="{{ product.image.url }}" class="card-img-top mb-3" alt="{{ product.name }}">
             {% endif %}
-            <p class="flex-grow-1">{{ product.description|truncatechars:100 }}</p>
-            <a href="{% url 'product_detail' product.pk %}" class="btn btn-lg btn-outline-indigo mt-auto">Подробнее</a>
+            <p class="flex-grow-1">{{ product.description|safe|truncatechars:100 }}</p>
+              <a href="{% url 'product_detail' product.pk %}" class="btn btn-lg mt-auto btn-custom">
+                Подробнее
+              </a>
           </div>
         </div>
       </div>

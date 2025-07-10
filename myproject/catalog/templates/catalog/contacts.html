@@ -3,60 +3,101 @@
 {% block title %}Skystore — Контакты{% endblock %}
 
 {% block content %}
+<style>
+  .form-control.flat {
+    border: none;
+    border-bottom: 2px solid #ced4da;
+    border-radius: 0;
+    box-shadow: none;
+    background-color: transparent;
+  }
+
+  .form-control.flat:focus {
+    border-bottom-color: #6610f2; /* фиолетовый акцент */
+    box-shadow: none;
+    outline: none;
+  }
+
+  .form-label {
+    font-weight: 500;
+  }
+
+.btn-custom {
+  color: #9370DB; /* нежный фиолетовый */
+  border: 2px solid #9370DB; /* чуть потолще, чтобы было лучше видно */
+  background-color: transparent;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  border-radius: 30px;
+  padding: 0.6rem 2.5rem; /* чуть больше паддингов — кнопка «дышит» */
+  font-weight: 600; /* чуть жирнее */
+  font-size: 1.1rem; /* чуть больше, приятнее для глаз */
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+  user-select: none; /* нельзя выделить текст */
+  box-shadow: 0 2px 5px rgba(147, 112, 219, 0.2); /* легкая тень для объема */
+}
+
+.btn-custom:hover,
+.btn-custom:focus {
+  background-color: #9370DB;
+  color: white;
+  text-decoration: none;
+  outline: none;
+  box-shadow: 0 4px 12px rgba(147, 112, 219, 0.5);
+  transform: scale(1.05); /* легкое увеличение */
+}
+
+.btn-custom:active {
+  transform: scale(0.98); /* эффект нажатия */
+  box-shadow: 0 2px 5px rgba(147, 112, 219, 0.3);
+}
+
+</style>
+
 <div class="container py-4">
   <div class="text-center mb-4">
     <h1 class="display-4">Контакты</h1>
+    <p class="lead">Если у вас есть вопросы и предложения, мы будем рады с Вами их обсудить</p>
   </div>
 
-  <div class="row justify-content-center mb-4">
-    <div class="col-md-6 col-lg-4">
-      <table class="table">
-        <tbody>
-          <tr>
-            <td>Страна</td>
-            <td>USA</td>
-          </tr>
-          <tr>
-            <td>ИНН</td>
-            <td>91-1144442</td>
-          </tr>
-          <tr>
-            <td>Адрес</td>
-            <td>Redmond, WA, 98052-6399</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="row justify-content-center">
-    <div class="col-md-6 col-lg-4">
-      <div class="card shadow-sm">
-        <div class="card-header">
-          <h4 class="my-0">Свяжитесь с нами</h4>
-        </div>
-        <div class="card-body">
-          <form method="post">
-            {% csrf_token %}
-            <div class="mb-3">
-              <label for="name" class="form-label">Имя</label>
-              <input type="text" class="form-control" id="name" name="name" placeholder="Ваше имя" required>
-            </div>
-            <div class="mb-3">
-              <label for="phone" class="form-label">Телефон</label>
-              <input type="text" class="form-control" id="phone" name="phone" placeholder="Контактный телефон" required>
-            </div>
-            <div class="mb-3">
-              <label for="message" class="form-label">Сообщение</label>
-              <textarea class="form-control" id="message" name="message" rows="3" placeholder="Ваше сообщение" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-lg w-100 btn-outline-indigo">Отправить</button>
-          </form>
-        </div>
+  <div class="row mt-5">
+    <!-- Левая колонка: Контакты -->
+    <div class="col-md-6 mb-4">
+      <div class="ps-3">
+        <p class="fs-4 mb-3"><strong>Страна:</strong> USA</p>
+        <p class="fs-4 mb-3"><strong>ИНН:</strong> 91-1144442</p>
+        <p class="fs-4 mb-3"><strong>Адрес:</strong> Redmond, WA, 98052-6399</p>
       </div>
+    </div>
+
+    <!-- Правая колонка: Форма -->
+    <div class="col-md-6">
+
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="mb-4 pb-3 ">
+            <label for="name" class="form-label">Имя</label>
+            <input type="text" class="form-control flat" id="name" name="name" placeholder="Ваше имя" required>
+          </div>
+
+          <div class="mb-4 pb-3 ">
+            <label for="phone" class="form-label">Телефон</label>
+            <input type="text" class="form-control flat" id="phone" name="phone" placeholder="Контактный телефон" required>
+          </div>
+
+          <div class="mb-4 pb-3 ">
+            <label for="message" class="form-label">Сообщение</label>
+            <textarea class="form-control flat" id="message" name="message"  placeholder="Ваше сообщение" required></textarea>
+          </div>
+<button type="submit" class="btn btn-lg mt-auto btn-custom">
+  Отправить
+</button>
+
+
+        </form>
     </div>
   </div>
 </div>
 {% endblock %}
-
-
