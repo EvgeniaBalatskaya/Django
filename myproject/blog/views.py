@@ -27,7 +27,7 @@ class BlogDetailView(DetailView):
                 subject='Поздравляем!',
                 message=f'Статья "{obj.title}" набрала 100 просмотров!',
                 from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=['твоя@почта.ру'],
+                recipient_list=['evgeniabalackaa6@gmail.com'],
             )
         return obj
 

@@ -1,0 +1,92 @@
+{% extends "catalog/base.html" %}
+{% load static %}
+{% block content %}
+<style>
+  label {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    display: inline-block;
+    color: #333;
+  }
+
+  select:hover,
+  select:focus {
+    border-color: #9370DB !important;
+    box-shadow: 0 0 0 0.2rem rgba(147, 112, 300, 0.5) !important;
+    outline: none;
+  }
+
+  input:focus,
+  textarea:focus {
+    border-color: #9370DB !important;
+    box-shadow: 0 0 0 0.2rem rgba(147, 112, 300, 0.5) !important;
+    outline: none;
+  }
+
+.btn-custom {
+  color: #9370DB;
+  border: 2px solid #9370DB;
+  background-color: transparent;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  border-radius: 30px;
+  padding: 0.6rem 2.5rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+  user-select: none;
+  box-shadow: 0 2px 5px rgba(147, 112, 219, 0.2);
+}
+
+.btn-custom:hover,
+.btn-custom:focus {
+  background-color: #9370DB;
+  color: white;
+  text-decoration: none;
+  outline: none;
+  box-shadow: 0 4px 12px rgba(147, 112, 219, 0.5);
+  transform: scale(1.05);
+}
+
+.btn-custom:active {
+  transform: scale(0.98); /* эффект нажатия */
+  box-shadow: 0 2px 5px rgba(147, 112, 219, 0.3);
+}
+</style>
+
+<div class="container py-4">
+  <div class="text-center mb-4">
+    <h1 class="display-4">Карточка товара</h1>
+    <p class="lead">Заполните форму ниже, чтобы добавить новый товар в каталог</p>
+  </div>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="p-4 bg-body-secondary rounded shadow-sm">
+
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+              <div class="mb-3">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                  <div class="text-danger">{{ field.errors }}</div>
+                {% endif %}
+              </div>
+            {% endfor %}
+
+            <div class="mt-4 d-flex justify-content-center gap-2 flex-wrap">
+              <button type="submit" class="btn btn-lg mt-auto btn-custom">
+                Сохранить
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

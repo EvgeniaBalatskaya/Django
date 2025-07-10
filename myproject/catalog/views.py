@@ -1,25 +1,39 @@
-from django.shortcuts import render, get_object_or_404
+from django.views.generic import ListView, DetailView, CreateView, FormView
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
 from .models import Product
-from django.core.paginator import Paginator
+from .forms import ProductForm
 
+class HomeView(ListView):
+    model = Product
+    template_name = 'catalog/home.html'
+    context_object_name = 'page_obj'  # чтобы совпадало с тем, что в шаблоне
+    paginate_by = 3
 
-def home(request):
-    product_list = Product.objects.all()
-    paginator = Paginator(product_list, 3)  # 3 товаров на страницу
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'catalog/home.html', {'page_obj': page_obj})
+class ContactsView(FormView):
+    template_name = 'catalog/contacts.html'
+    success_url = reverse_lazy('contacts')  # чтобы обновить страницу после отправки
 
-def contacts(request):
-    if request.method == 'POST':
-        # обработка формы
+    def post(self, request, *args, **kwargs):
         name = request.POST.get('name')
         phone = request.POST.get('phone')
         message = request.POST.get('message')
         context = {'success': True, 'name': name}
-        return render(request, 'catalog/contacts.html', context)
-    return render(request, 'catalog/contacts.html')
+        return self.render_to_response(context)
 
-def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    return render(request, 'catalog/product_detail.html', {'product': product})
+    def get(self, request, *args, **kwargs):
+        return self.render_to_response({})
+
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'catalog/product_detail.html'
+    context_object_name = 'product'
+
+class ProductCreateView(CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'catalog/product_create.html'
+
+    def get_success_url(self):
+        return reverse_lazy('product_detail', kwargs={'pk': self.object.pk})
+
