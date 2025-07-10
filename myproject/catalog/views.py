@@ -1,5 +1,4 @@
 from django.views.generic import ListView, DetailView, CreateView, FormView
-from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from .models import Product
 from .forms import ProductForm
@@ -7,12 +6,11 @@ from .forms import ProductForm
 class HomeView(ListView):
     model = Product
     template_name = 'catalog/home.html'
-    context_object_name = 'page_obj'  # чтобы совпадало с тем, что в шаблоне
     paginate_by = 3
 
 class ContactsView(FormView):
     template_name = 'catalog/contacts.html'
-    success_url = reverse_lazy('contacts')  # чтобы обновить страницу после отправки
+    success_url = reverse_lazy('contacts')
 
     def post(self, request, *args, **kwargs):
         name = request.POST.get('name')
