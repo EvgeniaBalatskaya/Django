@@ -22,13 +22,46 @@
     box-shadow: 0 0 0 0.2rem rgba(147, 112, 300, 0.5) !important;
     outline: none;
   }
+.product-card {
+  position: relative;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+  max-width: 500px;
+  margin: auto;
+}
+
+.product-card::before,
+.product-card::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #888;
+  pointer-events: none;
+}
+
+.product-card::before {
+  top: 0;
+  left: 0;
+  border-right: none;
+  border-bottom: none;
+}
+
+.product-card::after {
+  bottom: 0;
+  right: 0;
+  border-top: none;
+  border-left: none;
+}
 
 .btn-custom {
   color: #9370DB;
   border: 2px solid #9370DB;
   background-color: transparent;
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-  border-radius: 30px;
+  border-radius: 10px;
   padding: 0.6rem 2.5rem;
   font-weight: 600;
   font-size: 1.1rem;

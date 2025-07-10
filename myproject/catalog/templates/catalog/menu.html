@@ -7,66 +7,76 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 <style>
 .btn-menu {
-  background-color: #6c757d;
-  color: white;
+  position: relative;
+  background-color: transparent;
+  color: #000;
   border: none;
-  border-radius: 6px;
   padding: 0.5rem 1.2rem;
-  font-weight: 700;
   font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
   user-select: none;
   text-decoration: none;
-  display: inline-block;
-}
-
-.btn-menu:hover,
-.btn-menu:focus {
-  background-color: #5a6268;
-  color: white;
-  outline: none;
-  text-decoration: none;
-}
-
-.btn-menu:active {
-  background-color: #545b62;
-  color: white;
   outline: none;
 }
 
+.btn-menu::before,
+.btn-menu::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #888;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.btn-menu::before {
+  top: 0;
+  left: 0;
+  border-right: none;
+  border-bottom: none;
+}
+
+.btn-menu::after {
+  bottom: 0;
+  right: 0;
+  border-top: none;
+  border-left: none;
+}
+
+.btn-menu:hover::before,
+.btn-menu:hover::after,
+.btn-menu:focus::before,
+.btn-menu:focus::after {
+  opacity: 1;
+}
+
+/* Стили для выпадающего меню */
 .dropdown-menu {
-  background-color: #545b62;
   border: none;
-  border-radius: 6px;
-  padding: 0.1rem 0;
-  min-width: 150px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 0.5rem 0;
+  min-width: 180px;
 }
 
 .dropdown-item {
-  color: white;
-  padding: 0.5rem 1.1rem;
-  border-radius: 6px;
-  font-weight: 700;
+  position: relative;
   background-color: transparent;
-  border: none;
-  text-decoration: none;
+  color: #000;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  user-select: none;
-}
-
-.dropdown-item:hover,
-.dropdown-item:focus {
-  background-color: #9370DB;
-  color: white;
-  outline: none;
+  text-decoration: none;
+  transition: all 0.3s;
+  border: none;
 }
 
 .dropdown-item:active {
-  background-color: #9370DB;
-  color: white;
-  outline: none;
+  background-color: #e9ecef;
 }
-
 </style>
 </head>
 <body>
