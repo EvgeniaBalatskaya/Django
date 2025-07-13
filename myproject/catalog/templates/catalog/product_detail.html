@@ -1,7 +1,7 @@
 {% extends "catalog/base.html" %}
 {% block title %}{{ product.name }} — Skystore{% endblock %}
-{% block content %}
 
+{% block content %}
 <style>
 .btn-custom {
   color: #9370DB;
@@ -33,23 +33,103 @@
   transform: scale(0.98);
   box-shadow: 0 2px 5px rgba(147, 112, 219, 0.3);
 }
+
+
+
+  /* Центрируем весь текст внутри модального окна */
+#deleteModal .modal-content {
+  text-align: center;
+}
+
+/* Убираем крестик (кнопку закрытия) */
+#deleteModal .btn-close {
+  display: none;
+}
+
+/* Мягкий красный для кнопки "Удалить" */
+.btn-danger-soft {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-danger-soft:hover,
+.btn-danger-soft:focus {
+  color: white;
+  background-color: #d9534f; /* чуть ярче при наведении */
+  border-color: #d43f3a;
+  outline: none;
+}
+
+/* Новый стиль для одинакового размера и обрезки изображения */
+.product-image {
+  width: 500px;
+  height: 500px;
+  object-fit: cover;
+  object-position: center center;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 768px) {
+  .product-image {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+  }
+}
 </style>
 
-  <div class="container py-4">
-    <div class="d-flex flex-column flex-md-row align-items-start">
+<div class="container py-4">
+  <div class="row">
+    <!-- Левая колонка: изображение -->
+    <div class="col-md-6 mb-4">
       {% if product.image %}
-        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid me-md-4 mb-3" style="max-width: 550px;">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid mb-3 product-image">
       {% endif %}
-      <div>
-        <h1 class="mb-4">{{ product.name }}</h1>
-        <p>{{ product.description|safe }}</p>
-        <p class="fs-3"><strong>Цена:</strong> ${{ product.price }}</p>
-      </div>
     </div>
-  <div class="d-flex justify-content-center mt-2" style="padding-left: 70px;">
-    <a href="{% url 'home' %}" class="btn btn-lg mt-auto btn-custom">
-      Назад к каталогу
-    </a>
+
+    <!-- Правая колонка: текст -->
+    <div class="col-md-6">
+      <h1 class="mb-4">{{ product.name }}</h1>
+      <p>{{ product.description|safe }}</p>
+      <p class="fs-3"><strong>Цена:</strong> ${{ product.price }}</p>
+    </div>
+  </div>
+
+  <!-- Кнопки на одном уровне: "Назад" слева, остальные справа -->
+  <div class="row mt-4">
+    <div class="col-md-6 d-flex justify-content-start">
+      <a href="{% url 'home' %}" class="btn btn-lg btn-custom">Назад к каталогу</a>
+    </div>
+    <div class="col-md-6 d-flex justify-content-end gap-3">
+      <a href="{% url 'product_update' product.pk %}" class="btn btn-lg btn-custom">Редактировать</a>
+
+      <!-- Кнопка для вызова модального окна удаления -->
+      <button type="button" class="btn btn-lg btn-custom" data-bs-toggle="modal" data-bs-target="#deleteModal">
+        Удалить
+      </button>
+    </div>
   </div>
 </div>
+
+<!-- Модальное окно подтверждения удаления -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-4">
+      <h5 class="modal-title mb-3" id="deleteModalLabel">Подтверждение удаления</h5>
+      <p class="mb-4">Вы уверены, что хотите удалить эту карточку товара?</p>
+      <div class="d-flex justify-content-center gap-3">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <form action="{% url 'blog:blog_delete' object.pk %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger-soft">Удалить</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
+

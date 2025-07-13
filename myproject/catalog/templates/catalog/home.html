@@ -4,22 +4,62 @@
 
 {% block content %}
 <style>
+h4.my-0 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* ограничение в 2 строки */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 3rem; /* примерная высота 2 строк, можно подстроить */
+  line-height: 1.5rem; /* высота строки */
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+  padding-top: 0.8rem;
+}
+
 .pagination .page-link {
-  color: #6c757d;
-  border: 1px solid #6c757d;
+  color: #9370DB;
+  border: 2px solid #9370DB;
   background-color: transparent;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  padding: 0.3rem 0.9rem;
+  font-weight: 500;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+  user-select: none;
+  box-shadow: 0 1px 4px rgba(147, 112, 219, 0.2);
+}
+
+.pagination .page-link:hover,
+.pagination .page-link:focus {
+  background-color: #9370DB;
+  color: white;
+  text-decoration: none;
+  outline: none;
+  box-shadow: 0 3px 10px rgba(147, 112, 219, 0.5);
+  transform: scale(1.04);
 }
 
 .pagination .page-item.active .page-link {
-  background-color: #6c757d;
+  background-color: #9370DB;
   color: white;
-  border-color: #6c757d;
+  border-color: #9370DB;
+  box-shadow: 0 3px 10px rgba(147, 112, 219, 0.5);
 }
 
-.pagination .page-link:hover {
-  background-color: #6c757d;
-  color: white;
-  border-color: #6c757d;
+.pagination .page-item.disabled .page-link {
+  color: #bcbcbc;
+  border-color: #ddd;
+  pointer-events: none;
+  opacity: 0.5;
 }
 
 .btn-custom {
@@ -52,6 +92,39 @@
   box-shadow: 0 2px 5px rgba(147, 112, 219, 0.3);
 }
 
+/* Добавленный стиль для изображений и карточек */
+.card-img-top {
+  background: none !important; /* убирает фон */
+  box-shadow: none !important; /* убирает тень */
+  filter: none !important; /* убирает любые фильтры, например размытие */
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  object-position: center center;
+  border-radius: 10px;
+}
+
+
+@media (max-width: 768px) {
+  .card-img-top {
+    height: 250px;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-body {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
+}
 </style>
 
 <div class="container py-4">
@@ -73,57 +146,59 @@
             <img src="{{ product.image.url }}" class="card-img-top mb-3" alt="{{ product.name }}">
             {% endif %}
             <p class="flex-grow-1">{{ product.description|safe|truncatechars:100 }}</p>
-              <a href="{% url 'product_detail' product.pk %}" class="btn btn-lg mt-auto btn-custom">
-                Подробнее
-              </a>
+            <a href="{% url 'product_detail' product.pk %}" class="btn btn-lg mt-auto btn-custom">
+              Подробнее
+            </a>
           </div>
         </div>
       </div>
-   {% empty %}
+      {% empty %}
+        <p>Товаров нет.</p>
+      {% endfor %}
+    {% else %}
       <p>Товаров нет.</p>
-    {% endfor %}
-  {% else %}
-    <p>Товаров нет.</p>
-  {% endif %}
-</div>
+    {% endif %}
+  </div>
 
-<!-- Пагинация -->
-{% if page_obj.has_other_pages %}
-  <nav aria-label="Page navigation example">
+  <!-- Пагинация -->
+  {% if is_paginated %}
+  <nav aria-label="Pagination">
     <ul class="pagination justify-content-center">
       {% if page_obj.has_previous %}
         <li class="page-item">
           <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
+            &#x276E;
           </a>
         </li>
       {% else %}
         <li class="page-item disabled">
-          <span class="page-link" aria-label="Previous">&laquo;</span>
+          <span class="page-link">&#x276E;</span>
         </li>
       {% endif %}
 
       {% for num in page_obj.paginator.page_range %}
         {% if page_obj.number == num %}
-          <li class="page-item active" aria-current="page"><span class="page-link">{{ num }}</span></li>
+          <li class="page-item active"><span class="page-link">{{ num }}</span></li>
         {% else %}
-          <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+          <li class="page-item">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+          </li>
         {% endif %}
       {% endfor %}
 
       {% if page_obj.has_next %}
         <li class="page-item">
           <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
+            &#x276F;
           </a>
         </li>
       {% else %}
         <li class="page-item disabled">
-          <span class="page-link" aria-label="Next">&raquo;</span>
+          <span class="page-link">&#x276F;</span>
         </li>
       {% endif %}
     </ul>
   </nav>
-{% endif %}
+  {% endif %}
 </div>
 {% endblock %}

@@ -26,6 +26,8 @@ python -m venv .venv
 
 ### 3. Установи зависимости
 pip install django
+git push origin feature/form
+
 
 ### 4. Запусти сервер
 python manage.py runserver

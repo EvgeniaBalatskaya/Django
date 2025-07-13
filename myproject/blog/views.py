@@ -1,17 +1,21 @@
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import BlogPost
 from django.core.mail import send_mail
 from django.conf import settings
+
+from .models import BlogPost
+from .forms import BlogForm  # <--- подключаем кастомную форму
+
 
 class BlogListView(ListView):
     model = BlogPost
     template_name = 'blog/blog_list.html'
     context_object_name = 'object_list'
-    paginate_by = 5  # количество постов на страницу
+    paginate_by = 5
 
     def get_queryset(self):
         return BlogPost.objects.filter(is_published=True).order_by('-created_at')
+
 
 class BlogDetailView(DetailView):
     model = BlogPost
@@ -31,19 +35,23 @@ class BlogDetailView(DetailView):
             )
         return obj
 
+
 class BlogCreateView(CreateView):
     model = BlogPost
-    fields = ['title', 'content', 'preview', 'is_published']
-    template_name = 'blog/blog_form.html'
+    form_class = BlogForm  # <-- используем кастомную форму
+    template_name = 'blog/blog_create.html'
     success_url = reverse_lazy('blog:blog_list')
+
 
 class BlogUpdateView(UpdateView):
     model = BlogPost
-    fields = ['title', 'content', 'preview', 'is_published']
-    template_name = 'blog/blog_form.html'
+    form_class = BlogForm  # <-- используем кастомную форму
+    template_name = 'blog/blog_update.html'
+    success_url = reverse_lazy('blog:blog_list')
 
     def get_success_url(self):
         return self.object.get_absolute_url()
+
 
 class BlogDeleteView(DeleteView):
     model = BlogPost
