@@ -1,10 +1,120 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "catalog/base.html" %}
+{% load static %}
+{% block content %}
+<style>
+  label {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    display: inline-block;
+    color: #333;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    border: 1.5px solid #ccc;
+    border-radius: 12px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    background-color: white;
+    box-sizing: border-box;
+  }
+
+  select:hover,
+  select:focus,
+  input:hover,
+  textarea:hover,
+  input:focus,
+  textarea:focus {
+    border-color: #9370DB !important;
+    box-shadow: 0 0 0 0.2rem rgba(147, 112, 219, 0.5) !important;
+    outline: none;
+  }
+
+  .article-card {
+    background-color: #f0f0f0;
+    padding: 2rem 3rem;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: auto;
+  }
+
+  .btn-custom {
+    color: #9370DB;
+    border: 2px solid #9370DB;
+    background-color: transparent;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    border-radius: 10px;
+    padding: 0.6rem 2.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    user-select: none;
+    box-shadow: 0 2px 5px rgba(147, 112, 219, 0.2);
+  }
+
+  .btn-custom:hover,
+  .btn-custom:focus {
+    background-color: #9370DB;
+    color: white;
+    text-decoration: none;
+    outline: none;
+    box-shadow: 0 4px 12px rgba(147, 112, 219, 0.5);
+    transform: scale(1.05);
+  }
+
+  .btn-custom:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 5px rgba(147, 112, 219, 0.3);
+  }
+</style>
+
+<div class="container py-4">
+  <div class="text-center mb-4">
+    <h1 class="display-4">Редактирование карточки товара</h1>
+    <p class="lead">Измените поля и нажмите «Сохранить», чтобы обновить карточку товара</p>
+  </div>
+
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="article-card">
+
+            <form method="post" enctype="multipart/form-data" autocomplete="off">
+            {% csrf_token %}
+
+            {% for field in form.visible_fields %}
+              <div class="mb-3">
+                {{ field.label_tag }}
+                {{ field }}
+
+                {% if field.name == 'image' and form.instance.image %}
+                  <div class="mt-1 text-muted" style="font-size: 0.9rem;">
+                    Текущий файл: {{ form.instance.image.name|cut:"products/"|default:"Файл не загружен" }}
+                  </div>
+                {% endif %}
+
+                {% if field.errors %}
+                  <div class="text-danger">{{ field.errors }}</div>
+                {% endif %}
+              </div>
+            {% endfor %}
+
+            <div class="mt-4 d-flex justify-content-center">
+              <button type="submit" class="btn btn-lg btn-custom">Сохранить</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+

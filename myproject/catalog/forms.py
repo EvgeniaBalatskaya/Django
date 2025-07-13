@@ -20,13 +20,18 @@ class ProductForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'form-select'})
     )
 
+    image = forms.ImageField(
+        label='Изображение',
+        required=False,
+        widget=forms.FileInput(attrs={'class': 'form-control'})
+    )
+
     class Meta:
         model = Product
-        fields = ['name', 'description', 'image', 'category', 'price']
+        fields = ['name', 'description', 'category', 'price', 'image']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Добавляем классы только к нужным полям
         for field_name, field in self.fields.items():
             if field_name != 'category':
                 field.widget.attrs['class'] = 'form-control'
@@ -58,4 +63,3 @@ class ProductForm(forms.ModelForm):
         if price is not None and price < 0:
             raise forms.ValidationError('Цена не может быть отрицательной.')
         return price
-

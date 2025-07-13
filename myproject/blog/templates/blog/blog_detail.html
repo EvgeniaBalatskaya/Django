@@ -56,6 +56,32 @@
   transform: scale(0.98);
   box-shadow: 0 2px 5px rgba(147, 112, 219, 0.3);
 }
+
+  /* Центрируем весь текст внутри модального окна */
+#deleteModal .modal-content {
+  text-align: center;
+}
+
+/* Убираем крестик (кнопку закрытия) */
+#deleteModal .btn-close {
+  display: none;
+}
+
+/* Мягкий красный для кнопки "Удалить" */
+.btn-danger-soft {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-danger-soft:hover,
+.btn-danger-soft:focus {
+  color: white;
+  background-color: #d9534f; /* чуть ярче при наведении */
+  border-color: #d43f3a;
+  outline: none;
+}
 </style>
 
 <div class="blog-wrapper">
@@ -77,9 +103,36 @@
     {{ object.content|safe }}
   </div>
 
-  <div class="mt-4 d-flex justify-content-center gap-2 flex-wrap">
+<div class="mt-4 d-flex justify-content-between flex-wrap">
+  <div>
     <a href="{% url 'blog:blog_list' %}" class="btn btn-lg mt-auto btn-custom">Назад к списку</a>
   </div>
+
+  <div class="d-flex gap-2">
+    <a href="{% url 'blog:blog_update' object.pk %}" class="btn btn-lg mt-auto btn-custom">Редактировать</a>
+    <button type="button" class="btn btn-lg mt-auto btn-custom" data-bs-toggle="modal" data-bs-target="#deleteModal">
+      Удалить
+    </button>
+  </div>
 </div>
+
+
+<!-- Модальное окно подтверждения удаления -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-4">
+      <h5 class="modal-title mb-3" id="deleteModalLabel">Подтверждение удаления</h5>
+      <p class="mb-4">Вы уверены, что хотите удалить эту статью?</p>
+      <div class="d-flex justify-content-center gap-3">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <form action="{% url 'blog:blog_delete' object.pk %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger-soft">Удалить</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
 
