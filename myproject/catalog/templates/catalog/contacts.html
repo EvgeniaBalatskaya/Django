@@ -1,105 +1,103 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Skystore</title>
-    <!-- Подключите статичеcкие файлы со стилями Bootstrap -->
-</head>
-<body>
-<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-    <h5 class="my-0 mr-md-auto font-weight-normal">Skystore</h5>
-    <nav class="ms-5">
-        <a class="p-2 btn btn-outline-primary" href="/">Каталог</a>
-        <a class="p-2 btn btn-outline-primary" href="/contacts/">Контакты</a>
-    </nav>
-</div>
+{% extends "catalog/base.html" %}
 
-<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+{% block title %}Skystore — Контакты{% endblock %}
+
+{% block content %}
+<style>
+  .form-control.flat {
+    border: none;
+    border-bottom: 2px solid #ced4da;
+    border-radius: 0;
+    box-shadow: none;
+    background-color: transparent;
+  }
+
+  .form-control.flat:focus {
+    border-bottom-color: #6610f2; /* фиолетовый акцент */
+    box-shadow: none;
+    outline: none;
+  }
+
+  .form-label {
+    font-weight: 500;
+  }
+
+.btn-custom {
+  color: #9370DB;
+  border: 2px solid #9370DB;
+  background-color: transparent;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  border-radius: 10px;
+  padding: 0.6rem 2.5rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+  user-select: none;
+  box-shadow: 0 2px 5px rgba(147, 112, 219, 0.2);
+}
+
+.btn-custom:hover,
+.btn-custom:focus {
+  background-color: #9370DB;
+  color: white;
+  text-decoration: none;
+  outline: none;
+  box-shadow: 0 4px 12px rgba(147, 112, 219, 0.5);
+  transform: scale(1.05);
+}
+
+.btn-custom:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 5px rgba(147, 112, 219, 0.3);
+}
+
+</style>
+
+<div class="container py-4">
+  <div class="text-center mb-4">
     <h1 class="display-4">Контакты</h1>
-</div>
+    <p class="lead">Если у вас есть вопросы и предложения, мы будем рады с Вами их обсудить</p>
+  </div>
 
-<div class="container">
-    <div class="row text-start">
-        <div class="col-lg-9 col-md-6 col-sm-12">
-            <div class="card mb-4 box-shadow">
-                <div class="card-body">
-                    <table class="table table-striped">
-                        <tr>
-                            <td class="w-25">Страна</td>
-                            <td>USA</td>
-                        </tr>
-                        <tr>
-                            <td class="w-25">ИНН</td>
-                            <td>91-1144442</td>
-                        </tr>
-                        <tr>
-                            <td class="w-25">Адрес</td>
-                            <td>Redmond,WA,98052-6399</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <div class="card mb-4 box-shadow">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Свяжитесь с нами</h4>
-                </div>
-                <div class="card-body">
-                    <form method="post" action="" class="form-floating">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="name">Имя</label>
-                            <input type="text" name="name" class="form-control" id="name" placeholder="Ваше имя" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="phone">Телефон</label>
-                            <input type="text" name="phone" class="form-control" id="phone" placeholder="Контактный телефон" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="message">Сообщение</label>
-                            <textarea type="text" name="message" class="form-control" id="message" placeholder="Контактный телефон" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-lg btn-block btn-outline-primary">Отправить</button>
-                    </form>
-                </div>
-            </div>
-        </div>
+  <div class="row mt-5">
+    <!-- Левая колонка: Контакты -->
+    <div class="col-md-6 mb-4">
+      <div class="ps-3">
+        <p class="fs-4 mb-3"><strong>Страна:</strong> USA</p>
+        <p class="fs-4 mb-3"><strong>ИНН:</strong> 91-1144442</p>
+        <p class="fs-4 mb-3"><strong>Адрес:</strong> Redmond, WA, 98052-6399</p>
+      </div>
     </div>
 
-    <footer class="pt-4 my-md-5 pt-md-5 border-top">
-        <div class="row">
-            <div class="col-12 col-md">
-                SkyStore
-                <small class="d-block mb-3 text-muted">&copy; 2023</small>
-            </div>
-            <div class="col-6 col-md">
-                <h5>Категории</h5>
-                <ul class="list-unstyled text-small">
-                    <li><a class="text-muted" href="#">Рассылки</a></li>
-                    <li><a class="text-muted" href="#">Телеграм боты</a></li>
-                    <li><a class="text-muted" href="#">Полезные утилиты</a></li>
-                    <li><a class="text-muted" href="#">Веб-приложения</a></li>
-                    <li><a class="text-muted" href="#">Микросервисы</a></li>
-                </ul>
-            </div>
-            <div class="col-6 col-md">
-                <h5>Дополнительно</h5>
-                <ul class="list-unstyled text-small">
-                    <li><a class="text-muted" href="#">Мы пишем</a></li>
-                </ul>
-            </div>
-            <div class="col-6 col-md">
-                <h5>О нас</h5>
-                <ul class="list-unstyled text-small">
-                    <li><a class="text-muted" href="/contacts/">Контакты</a></li>
-                </ul>
-            </div>
-        </div>
-    </footer>
-</div>
+    <!-- Правая колонка: Форма -->
+    <div class="col-md-6">
 
-<!-- Подключите статичеcкие файлы со скриптами Bootstrap -->
-</body>
-</html>
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="mb-4 pb-3 ">
+            <label for="name" class="form-label">Имя</label>
+            <input type="text" class="form-control flat" id="name" name="name" placeholder="Ваше имя" required>
+          </div>
+
+          <div class="mb-4 pb-3 ">
+            <label for="phone" class="form-label">Телефон</label>
+            <input type="text" class="form-control flat" id="phone" name="phone" placeholder="Контактный телефон" required>
+          </div>
+
+          <div class="mb-4 pb-3 ">
+            <label for="message" class="form-label">Сообщение</label>
+            <textarea class="form-control flat" id="message" name="message"  placeholder="Ваше сообщение" required></textarea>
+          </div>
+<button type="submit" class="btn btn-lg mt-auto btn-custom">
+  Отправить
+</button>
+
+
+        </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

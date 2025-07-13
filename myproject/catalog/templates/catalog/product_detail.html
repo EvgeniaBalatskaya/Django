@@ -1,0 +1,55 @@
+{% extends "catalog/base.html" %}
+{% block title %}{{ product.name }} — Skystore{% endblock %}
+{% block content %}
+
+<style>
+.btn-custom {
+  color: #9370DB;
+  border: 2px solid #9370DB;
+  background-color: transparent;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  border-radius: 10px;
+  padding: 0.6rem 2.5rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+  user-select: none;
+  box-shadow: 0 2px 5px rgba(147, 112, 219, 0.2);
+}
+
+.btn-custom:hover,
+.btn-custom:focus {
+  background-color: #9370DB;
+  color: white;
+  text-decoration: none;
+  outline: none;
+  box-shadow: 0 4px 12px rgba(147, 112, 219, 0.5);
+  transform: scale(1.05);
+}
+
+.btn-custom:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 5px rgba(147, 112, 219, 0.3);
+}
+</style>
+
+  <div class="container py-4">
+    <div class="d-flex flex-column flex-md-row align-items-start">
+      {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid me-md-4 mb-3" style="max-width: 550px;">
+      {% endif %}
+      <div>
+        <h1 class="mb-4">{{ product.name }}</h1>
+        <p>{{ product.description|safe }}</p>
+        <p class="fs-3"><strong>Цена:</strong> ${{ product.price }}</p>
+      </div>
+    </div>
+  <div class="d-flex justify-content-center mt-2" style="padding-left: 70px;">
+    <a href="{% url 'home' %}" class="btn btn-lg mt-auto btn-custom">
+      Назад к каталогу
+    </a>
+  </div>
+</div>
+{% endblock %}
