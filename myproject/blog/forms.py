@@ -1,9 +1,7 @@
 from django import forms
+from ckeditor.widgets import CKEditorWidget
 from .models import BlogPost
 from .utils import resize_image
-from ckeditor.widgets import CKEditorWidget
-
-
 
 FORBIDDEN_WORDS = [
     'казино', 'криптовалюта', 'крипта', 'биржа', 'дешево',
@@ -17,10 +15,7 @@ class BlogForm(forms.ModelForm):
     )
     content = forms.CharField(
         label='Описание',
-        widget=forms.Textarea(attrs={
-            'class': 'form-control',
-            'rows': 10
-        })
+        widget=CKEditorWidget()
     )
     preview = forms.ImageField(
         label='Изображение',
@@ -46,14 +41,14 @@ class BlogForm(forms.ModelForm):
         for word in FORBIDDEN_WORDS:
             if word in title:
                 raise forms.ValidationError(f'Слово "{word}" запрещено использовать в заголовке.')
-        return self.cleaned_data['title']
+        return title
 
     def clean_content(self):
         content = self.cleaned_data.get('content', '').lower()
         for word in FORBIDDEN_WORDS:
             if word in content:
                 raise forms.ValidationError(f'Слово "{word}" запрещено использовать в содержимом статьи.')
-        return self.cleaned_data['content']
+        return content
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -65,4 +60,3 @@ class BlogForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
-

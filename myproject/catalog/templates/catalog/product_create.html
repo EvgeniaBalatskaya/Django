@@ -1,106 +1,107 @@
 {% extends "catalog/base.html" %}
 {% load static %}
 {% block content %}
+{% load widget_tweaks %}
+{% load static %}
+<script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+
 <style>
-  /* Названия (labels) по стилю второго варианта — компактные, inline-block */
-  label {
-    font-weight: 600;
-    margin-bottom: 0.3rem;
-    display: inline-block;
-    color: #333;
-  }
+label {
+font-weight: 600;
+margin-bottom: 0.3rem;
+display: inline-block;
+color: #333;
+}
 
-  /* Общее для всех полей ввода — ширина, отступы, скругления, плавные переходы */
-  input,
-  select,
-  textarea {
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    font-size: 1rem;
-    border: 1.5px solid #ccc;
-    border-radius: 12px;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    background-color: white;
-    box-sizing: border-box;
-  }
+input,
+select,
+textarea {
+width: 100%;
+padding: 0.5rem 0.75rem;
+font-size: 1rem;
+border: 1.5px solid #ccc;
+border-radius: 12px;
+transition: border-color 0.2s ease, box-shadow 0.2s ease;
+background-color: white;
+box-sizing: border-box;
+}
 
-  /* Ховер и фокус для select */
-  select:hover,
-  select:focus {
-    border-color: #9370DB !important;
-    box-shadow: 0 0 0 0.2rem rgba(147, 112, 219, 0.5) !important;
-    outline: none;
-  }
+select:hover,
+select:focus {
+border-color: #9370DB !important;
+box-shadow: 0 0 0 0.2rem rgba(147, 112, 219, 0.5) !important;
+outline: none;
+}
 
-  /* Ховер и фокус для input и textarea */
-  input:hover,
-  textarea:hover,
-  input:focus,
-  textarea:focus {
-    border-color: #9370DB !important;
-    box-shadow: 0 0 0 0.2rem rgba(147, 112, 219, 0.5) !important;
-    outline: none;
-  }
+input:hover,
+textarea:hover,
+input:focus,
+textarea:focus {
+border-color: #9370DB !important;
+box-shadow: 0 0 0 0.2rem rgba(147, 112, 219, 0.5) !important;
+outline: none;
+}
 
-  /* Карточка (article-card) — по первому варианту с серым фоном, шире, закругления 20px */
-  .article-card {
-    background-color: #f0f0f0;
-    padding: 2rem 3rem;
-    border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-width: 900px;
-    margin: auto;
-  }
+.article-card {
+background-color: #f0f0f0;
+padding: 2rem 3rem;
+border-radius: 20px;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+max-width: 900px;
+margin: auto;
+}
 
-  /* Кнопка — оставляем из второго варианта, как есть */
-  .btn-custom {
-    color: #9370DB;
-    border: 2px solid #9370DB;
-    background-color: transparent;
-    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-    border-radius: 10px;
-    padding: 0.6rem 2.5rem;
-    font-weight: 600;
-    font-size: 1.1rem;
-    cursor: pointer;
-    display: inline-block;
-    text-decoration: none;
-    user-select: none;
-    box-shadow: 0 2px 5px rgba(147, 112, 219, 0.2);
-  }
 
-  .btn-custom:hover,
-  .btn-custom:focus {
-    background-color: #9370DB;
-    color: white;
-    text-decoration: none;
-    outline: none;
-    box-shadow: 0 4px 12px rgba(147, 112, 219, 0.5);
-    transform: scale(1.05);
-  }
+.btn-custom {
+color: #9370DB;
+border: 2px solid #9370DB;
+background-color: transparent;
+transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+border-radius: 10px;
+padding: 0.6rem 2.5rem;
+font-weight: 600;
+font-size: 1.1rem;
+cursor: pointer;
+display: inline-block;
+text-decoration: none;
+user-select: none;
+box-shadow: 0 2px 5px rgba(147, 112, 219, 0.2);
+}
 
-  .btn-custom:active {
-    transform: scale(0.98);
-    box-shadow: 0 2px 5px rgba(147, 112, 219, 0.3);
-  }
+.btn-custom:hover,
+.btn-custom:focus {
+background-color: #9370DB;
+color: white;
+text-decoration: none;
+outline: none;
+box-shadow: 0 4px 12px rgba(147, 112, 219, 0.5);
+transform: scale(1.05);
+}
+
+.btn-custom:active {
+transform: scale(0.98);
+box-shadow: 0 2px 5px rgba(147, 112, 219, 0.3);
+}
 </style>
-
 
 <div class="container py-4">
   <div class="text-center mb-4">
-    <h1 class="display-4">Карточка товара <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-card-heading" viewBox="0 0 16 16">
-  <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z"/>
-  <path d="M3 8.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m0-5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5z"/>
-</svg></h1>
+    <h1 class="display-4">
+      Карточка товара
+      <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-card-heading" viewBox="0 0 16 16">
+        <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z"/>
+        <path d="M3 8.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m0-5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5z"/>
+      </svg>
+    </h1>
     <p class="lead">Заполните форму ниже, чтобы добавить новый товар в каталог</p>
   </div>
+
   <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-lg-10">
         <div class="article-card">
-
-            <form method="post" enctype="multipart/form-data" autocomplete="off">
-
+          <form method="post" enctype="multipart/form-data" autocomplete="off">
             {% csrf_token %}
             {% for field in form %}
               <div class="mb-3">
@@ -114,18 +115,16 @@
                 {% endif %}
               </div>
             {% endfor %}
-
-
             <div class="mt-4 d-flex justify-content-center gap-2 flex-wrap">
               <button type="submit" class="btn btn-lg mt-auto btn-custom">
                 Сохранить
               </button>
             </div>
           </form>
-
         </div>
       </div>
     </div>
   </div>
 </div>
 {% endblock %}
+

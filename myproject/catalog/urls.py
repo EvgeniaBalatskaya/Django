@@ -7,6 +7,10 @@ from .views import (
     ProductUpdateView,
     ProductDeleteView,
 )
+from .views import user_products_view
+from django.conf.urls.static import static
+from django.conf import settings
+app_name = 'catalog'
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
@@ -15,4 +19,9 @@ urlpatterns = [
     path('product_create/', ProductCreateView.as_view(), name='product_create'),
     path('product/<int:pk>/update/', ProductUpdateView.as_view(), name='product_update'),  # добавляем update
     path('product/<int:pk>/delete/', ProductDeleteView.as_view(), name='product_delete'),  # добавляем delete
+    path('my-products/', user_products_view, name='user_products'),
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

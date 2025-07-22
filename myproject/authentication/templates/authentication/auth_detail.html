@@ -1,0 +1,564 @@
+{% extends 'catalog/base.html' %}
+{% block title %}Профиль пользователя{% endblock %}
+{% block content %}
+
+<style>
+/* Общие настройки контейнеров */
+.general-settings {
+  display: flex;
+  justify-content: flex-start;
+  gap: 2rem;
+  max-width: 1300px;
+  margin: 0 auto 2rem;
+  overflow: visible;
+  flex-wrap: nowrap;
+}
+
+/* Карточка профиля */
+.profile-card {
+  flex: 280px;
+  min-width: 280px;
+  max-width: 280%;
+  background-color: #f0f0f0;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.1);
+  overflow: hidden;
+  display: flex;
+  flex-wrap: nowrap;
+  margin: 0;
+}
+
+/* Картинка профиля */
+.profile-img-wrapper {
+  flex: 1 1 60%;
+  max-width: 60%;
+  position: relative;
+  background-color: transparent;
+  padding-left: 1rem;
+  padding-right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.profile-img-container {
+  position: relative;
+  width: 100%;
+}
+
+.profile-img-wrapper img {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  user-select: none;
+  display: block;
+}
+
+/* Иконка загрузки фото */
+.upload-icon-label {
+  position: absolute;
+  top: 10px;
+  right:70px;
+  z-index: 2;
+  background-color: rgba(255,255,255,0.8);
+  border-radius: 50%;
+  padding: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.upload-icon-label:hover {
+  background-color: rgba(147,112,219,0.9);
+}
+
+.upload-icon-label svg {
+  width: 24px;
+  height: 24px;
+  fill: #9370db;
+}
+
+#photo-upload-input {
+  display: none;
+}
+
+/* Внутренние данные профиля */
+.profile-meta {
+  font-size: 0.95rem;
+  color: #555;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.profile-meta small {
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+/* Карусель для статей блога */
+.articles-carousel {
+  flex: 1 1 280px;
+  min-width: 300px;
+  background-color: #f0f0f0;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+}
+
+.carousel-inner {
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.carousel-item img {
+  object-fit: cover;
+  height: 300px;
+  width: 100%;
+}
+
+.carousel-caption h5 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  height: auto;
+  overflow: visible;
+  text-overflow: unset;
+  display: block;
+  white-space: normal;
+  margin-bottom: 0.3rem;
+  line-height: 1.2;
+}
+
+.carousel-caption {
+  background-color: rgba(0,0,0,0.5);
+  border-radius: 0.3rem;
+  padding: 0.5rem 1rem;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  position: absolute; /* явно для карусели */
+}
+
+/* Карточка товара */
+.products-list {
+  display: grid;
+  grid-template-columns: repeat(4, 280px);
+  gap: 2rem;
+  max-width: calc(280px * 4 + 2rem * 3);
+  margin: 0 auto;
+}
+
+.product-card {
+  width: 280px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  box-sizing: border-box;
+    padding-top: 2rem;
+}
+
+.product-card:hover {
+  border-color: #9370DB;
+  box-shadow: 0 0 30px #9370DB;
+  cursor: pointer;
+}
+
+.product-image {
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  padding: 10px;           /* отступы внутри блока от края */
+  box-sizing: border-box;  /* чтобы padding учитывался внутри ширины */
+  border-radius: 15px;     /* закругление углов у контейнера */
+  background: #fff;        /* фон карточки, можно изменить */
+
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 12px;     /* закругление углов самого изображения */
+}
+
+
+.product-card-content {
+  padding: 1rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.product-card-content h4 {
+  font-size: 1.1rem;
+  margin: 0;
+  line-height: 1.3;
+  text-align: left;
+  max-height: calc(1.3rem * 2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* Стиль для добавления карточки "+" */
+.add-card {
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  color: #666;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  border: 2px dashed #bbb;
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+}
+
+.add-card:hover {
+  border-color: #9370DB;
+  box-shadow: 0 0 30px #9370DB;
+  cursor: pointer;
+}
+
+.add-card a {
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: -1rem;
+}
+
+.add-card:hover {
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+/* Адаптивность */
+@media (max-width: 900px) {
+  .profile-and-carousel {
+    flex-direction: column;
+    max-width: 100%;
+    overflow: visible;
+  }
+
+  .profile-card,
+  .articles-carousel {
+    max-width: 100%;
+    flex: none;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .profile-info {
+    max-width: 100%;
+    flex: none;
+    padding: 1rem;
+  }
+
+  .profile-img-wrapper {
+    max-width: 100%;
+    flex: none;
+    padding-left: 0;
+    justify-content: center;
+  }
+
+  .profile-img-wrapper img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+.add-card {
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  color: #666;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  border: 2px dashed #bbb;
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-card:hover {
+  border-color: #9370DB;
+  box-shadow: 0 0 30px #9370DB;
+  cursor: pointer;
+}
+
+/* Пустая карточка блога */
+.add-article-card {
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  color: #666;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  border: 2px dashed #bbb;
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 300px;
+  width: 100%;
+  background-color: #f0f0f0;
+  overflow: hidden;
+}
+
+.add-article-card:hover {
+  border-color: #9370DB;
+  box-shadow:0 0 30px #9370DB;
+  cursor: pointer;
+}
+
+.plus-sign {
+  font-size: 4rem;
+  color: #000;
+  margin-top: 85px;
+  user-select: none;
+  color: #666;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+
+.add-article-link {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: black;
+  text-decoration: none;
+  position: relative;
+  gap: 1rem;
+}
+
+.add-text {
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+  right: 20px;
+  background-color: rgba(0,0,0,0.1);
+  border-radius: 0.3rem;
+  padding: 1rem;
+  font-size: 1.2rem;
+  text-align: center;
+  user-select: none;
+  color: #666;
+}
+</style>
+
+<!-- Шапка -->
+<div class="text-center mb-4">
+  <h1 class="display-4">Мой профиль</h1>
+  <p class="lead mb-5">
+    Все ваши товары и статьи собраны здесь — создавайте, редактируйте и публикуйте
+  </p>
+</div>
+
+
+<div class="general-settings">
+  <!-- Карточка профиля -->
+  <div class="profile-card">
+    <div class="profile-img-wrapper">
+      <div class="profile-img-container">
+        {% if user.avatar %}
+          <img src="{{ user.avatar.url }}" alt="Фото профиля {{ user.get_full_name|default:user.username }}" class="profile-img">
+        {% else %}
+          <img src="{{ MEDIA_URL }}products/no-image.png" alt="Изображение отсутствует" class="profile-img">
+        {% endif %}
+        <!-- Иконка для фото профиля -->
+        <form method="post" action="{% url 'authentication:profile_edit_photo' %}" enctype="multipart/form-data" id="photo-upload-form">
+          {% csrf_token %}
+          <input type="file" name="photo" id="photo-upload-input" accept="image/*" required>
+          <label for="photo-upload-input" class="upload-icon-label" title="Загрузить фото">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera" viewBox="0 0 16 16">
+              <path d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4z"/>
+              <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5m0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0"/>
+            </svg>
+          </label>
+        </form>
+      </div>
+    </div>
+    <!-- Информация профиля -->
+    <div class="profile-info">
+      <div class="profile-meta">
+        <small style="font-size: 19px;" ><strong>Имя:</strong>
+          {% if user.first_name|length > 20 %}
+            {{ user.first_name|slice:":17" }}
+          {% else %}
+            {{ user.first_name }}
+          {% endif %}
+        </small>
+        <small style="font-size: 19px;"><strong>Фамилия:</strong>
+          {% if user.last_name|length > 15 %}
+            {{ user.last_name|slice:":17" }}
+          {% else %}
+            {{ user.last_name }}
+          {% endif %}
+        </small>
+        <small><strong>Email:</strong> {{ user.email }}</small>
+        <small><strong>Телефон:</strong> {{ user.phone|default:"Не указан" }}</small><br>
+        <small><strong>Карточек создано:</strong> {{ product_count }}</small>
+        <small><strong>Статей создано:</strong> {{ article_count }}</small><br>
+
+      </div>
+  </div>
+</div>
+
+
+<!-- Карусель статей данного пользователя -->
+<div class="articles-carousel w-100">
+  {% if blog_posts %}
+    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        {% for post in blog_posts %}
+          <button type="button"
+                  data-bs-target="#carouselExampleCaptions"
+                  data-bs-slide-to="{{ forloop.counter0 }}"
+                  class="{% if forloop.first %}active{% endif %}"
+                  aria-current="{% if forloop.first %}true{% endif %}"
+                  aria-label="Slide {{ forloop.counter }}"></button>
+        {% endfor %}
+      </div>
+      <div class="carousel-inner">
+        {% for post in blog_posts %}
+          <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            <a href="{% url 'blog:blog_detail' post.pk %}" style="display: block; color: inherit; text-decoration: none;">
+              {% if post.preview %}
+                <img src="{{ post.preview.url }}" class="d-block w-100" alt="Изображение поста">
+              {% else %}
+                <img src="{{ MEDIA_URL }}products/no-image.png" class="d-block w-100" alt="Изображение отсутствует">
+              {% endif %}
+              <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3 p-2">
+                <h5>{{ post.title }}</h5>
+                <p>{{ post.short_description|truncatewords:20 }}</p>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Назад</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Вперёд</span>
+      </button>
+    </div>
+    <!-- Карточка если статей нет -->
+    {% else %}
+      <div class="add-article-card">
+          <a href="{% url 'blog:blog_create' %}"
+             class="align-items-center text-decoration-none"
+             style="height: 300px; width: 100%;">
+        <div class="plus-sign">+</div>
+        <div class="add-text">Пока нет ни одной статьи… самое время написать первую</div>
+          </a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+
+<!-- Карточки товаров пользователя по категориям -->
+<div class="user-products-card">
+  {% for category, products in products_by_category.items %}
+    <div class="category-card" style="background-color: #f0f0f0; padding: 20px; margin-bottom: 25px; border-radius: 10px;">
+      <h3 style="margin-bottom: 8px; padding-left: 25px;">{{ category.name }}</h3>
+      <hr style="border: none; border-top: 2px solid #ccc; margin: 15px 0;">
+      <div class="products-list">
+        {% if products %}
+          {% for product in products %}
+            <div class="product-card">
+              <a href="{% url 'catalog:product_detail' product.pk %}" style="text-decoration: none; color: inherit; display: block; height: 100%;">
+                <div class="product-image">
+                  {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                  {% else %}
+                    <img src="{{ MEDIA_URL }}products/no-image.png" alt="Изображение отсутствует">
+                  {% endif %}
+                </div>
+                <div class="product-card-content">
+                  <h4>{{ product.name }}</h4>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+        {% endif %}
+        <!-- Карточка для добавления нового товара -->
+        <div class="product-card add-card">
+          <a href="{% url 'catalog:product_create' %}?category={{ category.id }}">+</a>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const input = document.getElementById('photo-upload-input');
+    const form = document.getElementById('photo-upload-form');
+
+    if (input && form) {
+      input.addEventListener('change', function () {
+        form.submit();
+      });
+    }
+  });
+</script>
+<script>
+  function adjustFontSizeToFit(element, minFontSize = 12, maxFontSize = 24) {
+    let fontSize = maxFontSize;
+    element.style.fontSize = fontSize + 'px';
+
+    while (element.scrollWidth > element.clientWidth && fontSize > minFontSize) {
+      fontSize -= 1;
+      element.style.fontSize = fontSize + 'px';
+    }
+  }
+
+  function applyAdjustFont() {
+    const fullNameEl = document.querySelector('.user-full-name');
+    if (fullNameEl) {
+      adjustFontSizeToFit(fullNameEl, 12, 24);
+    }
+  }
+
+  window.addEventListener('load', applyAdjustFont);
+  window.addEventListener('resize', applyAdjustFont);
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+{% endblock %}

@@ -1,5 +1,6 @@
 from django import forms
 from .models import Product, Category
+from ckeditor.widgets import CKEditorWidget
 
 FORBIDDEN_WORDS = [
     'казино', 'криптовалюта', 'крипта', 'биржа', 'дешево',
@@ -9,7 +10,7 @@ FORBIDDEN_WORDS = [
 class ProductForm(forms.ModelForm):
     description = forms.CharField(
         label='Описание',
-        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4})
+        widget=CKEditorWidget()
     )
 
     category = forms.ModelChoiceField(

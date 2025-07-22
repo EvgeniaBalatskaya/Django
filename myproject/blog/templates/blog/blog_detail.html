@@ -1,11 +1,16 @@
 {% extends 'catalog/base.html' %}
-
 {% block title %}{{ object.title }}{% endblock %}
-
 {% block content %}
+{% load static %}
+<script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
 <style>
 .blog-img-rounded {
   border-radius: 10px;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .blog-wrapper {
@@ -82,16 +87,44 @@
   border-color: #d43f3a;
   outline: none;
 }
+
+.btn-custom-gray {
+color: #6c757d; /* серый цвет текста */
+border: 2px solid #6c757d; /* серый бордер */
+background-color: transparent;
+transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+border-radius: 10px;
+padding: 0.6rem 2.5rem;
+font-weight: 600;
+font-size: 1.1rem;
+cursor: pointer;
+display: inline-block;
+text-decoration: none;
+user-select: none;
+box-shadow: 0 2px 5px rgba(108, 117, 125, 0.2);
+}
+
+.btn-custom-gray:hover,
+.btn-custom-gray:focus {
+background-color: #6c757d; /* серый фон при наведении */
+color: white;
+text-decoration: none;
+outline: none;
+box-shadow: 0 4px 12px rgba(108, 117, 125, 0.5);
+transform: scale(1.05);
+}
 </style>
 
 <div class="blog-wrapper">
-  <h1>{{ object.title }}</h1>
+  <h1>{{ object.title }}</h1><br>
 
   {% if object.preview %}
     <img src="{{ object.preview.url }}"
          alt="превью {{ object.title }}"
          class="w-100 blog-img-rounded mb-3">
-  {% endif %}
+          {% else %}
+              <img src="{{ MEDIA_URL }}products/no-image.png" alt="Изображение отсутствует" class="w-100 blog-img-rounded mb-3">
+          {% endif %}
 
   <div class="d-flex justify-content-between mb-3">
     <small class="text-start">Просмотров: {{ object.views_count }}</small>
@@ -108,15 +141,14 @@
     <a href="{% url 'blog:blog_list' %}" class="btn btn-lg mt-auto btn-custom">Назад к списку</a>
   </div>
 
+{% if user.is_authenticated and user == object.author %}
   <div class="d-flex gap-2">
-    <a href="{% url 'blog:blog_update' object.pk %}" class="btn btn-lg mt-auto btn-custom">Редактировать</a>
-    <button type="button" class="btn btn-lg mt-auto btn-custom" data-bs-toggle="modal" data-bs-target="#deleteModal">
+    <a href="{% url 'blog:blog_update' object.pk %}" style="margin-right: 10px;" class="btn-custom-gray">Редактировать</a>
+    <button type="button" class="btn-custom-gray" data-bs-toggle="modal" data-bs-target="#deleteModal">
       Удалить
     </button>
   </div>
-</div>
-
-
+{% endif %}
 <!-- Модальное окно подтверждения удаления -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
