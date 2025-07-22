@@ -2,9 +2,10 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.core.mail import send_mail
 from django.conf import settings
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import BlogPost
-from .forms import BlogForm  # <--- подключаем кастомную форму
+from .forms import BlogForm
+
 
 
 class BlogListView(ListView):
@@ -16,6 +17,10 @@ class BlogListView(ListView):
     def get_queryset(self):
         return BlogPost.objects.filter(is_published=True).order_by('-created_at')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['MEDIA_URL'] = settings.MEDIA_URL
+        return context
 
 class BlogDetailView(DetailView):
     model = BlogPost
@@ -35,17 +40,25 @@ class BlogDetailView(DetailView):
             )
         return obj
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['MEDIA_URL'] = settings.MEDIA_URL
+        return context
 
-class BlogCreateView(CreateView):
+class BlogCreateView(LoginRequiredMixin, CreateView):
     model = BlogPost
-    form_class = BlogForm  # <-- используем кастомную форму
+    form_class = BlogForm
     template_name = 'blog/blog_create.html'
     success_url = reverse_lazy('blog:blog_list')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 
 class BlogUpdateView(UpdateView):
     model = BlogPost
-    form_class = BlogForm  # <-- используем кастомную форму
+    form_class = BlogForm
     template_name = 'blog/blog_update.html'
     success_url = reverse_lazy('blog:blog_list')
 
@@ -57,3 +70,5 @@ class BlogDeleteView(DeleteView):
     model = BlogPost
     template_name = 'blog/blog_confirm_delete.html'
     success_url = reverse_lazy('blog:blog_list')
+
+
