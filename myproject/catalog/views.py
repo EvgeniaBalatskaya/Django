@@ -9,9 +9,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views import View
 from django.http import Http404
 from django.http import HttpResponseForbidden
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from .services import get_products_by_category
+from django.core.cache import cache
+
 def is_moderator(user):
     return user.is_authenticated and (user.is_staff or user.groups.filter(name='Модератор продуктов').exists())
-
 
 
 class HomeView(ListView):
@@ -46,24 +50,27 @@ class ContactsView(FormView):
     def get(self, request, *args, **kwargs):
         return self.render_to_response({})
 
-
-
+@method_decorator(cache_page(60 * 5), name='dispatch')
 class ProductDetailView(DetailView):
     model = Product
     template_name = 'catalog/product_detail.html'
     context_object_name = 'product'
 
     def get_object(self, queryset=None):
+        print("get_object вызван — значит кэш не сработал")
         obj = super().get_object(queryset)
         user = self.request.user
         print(
-            f"Product is_published={obj.is_published}, user={user}, user.is_staff={user.is_staff}, is_moderator={is_moderator(user)}"
+            f"Product is_published={obj.is_published}, user={user}, "
+            f"user.is_staff={getattr(user, 'is_staff', False)}, "
+            f"is_moderator={is_moderator(user)}"
         )
         if not obj.is_published and not (user.is_authenticated and is_moderator(user)):
             raise Http404("Продукт не найден")
         return obj
 
     def get_context_data(self, **kwargs):
+        print("get_context_data вызван — значит кэш не сработал")
         context = super().get_context_data(**kwargs)
         context['MEDIA_URL'] = settings.MEDIA_URL
 
@@ -72,6 +79,7 @@ class ProductDetailView(DetailView):
 
         context['is_author'] = user.is_authenticated and user == product.author
         context['is_moderator'] = is_moderator(user)
+
 
         return context
 
@@ -140,6 +148,7 @@ def user_products_view(request):
     })
 
 
+
 class ProductPublishView(View):
     def post(self, request, pk):
         user = request.user
@@ -151,6 +160,9 @@ class ProductPublishView(View):
 
         product.is_published = True
         product.save()
+
+        cache.clear()  # Сбросить весь кеш (тест, не оптимально для продакшена)
+
         return redirect(product.get_absolute_url())
 
 class ProductUnpublishView(View):
@@ -164,4 +176,25 @@ class ProductUnpublishView(View):
 
         product.is_published = False
         product.save()
+
+        cache.clear()  # Сбросить весь кеш (тест)
+
         return redirect(product.get_absolute_url())
+
+class CategoryProductListView(ListView):
+    model = Product
+    template_name = 'catalog/category_products.html'
+    context_object_name = 'products'
+    paginate_by = 10
+
+    def get_queryset(self):
+        category_id = self.kwargs.get('category_id')
+        return get_products_by_category(category_id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category_id = self.kwargs.get('category_id')
+        context['category'] = get_object_or_404(Category, id=category_id)
+        return context
+
+
