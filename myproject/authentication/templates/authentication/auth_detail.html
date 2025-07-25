@@ -14,53 +14,47 @@
   flex-wrap: nowrap;
 }
 
-/* Карточка профиля */
 .profile-card {
-  flex: 280px;
-  min-width: 280px;
-  max-width: 280%;
+  display: flex;
+  flex-wrap: nowrap;
+  margin: 0;
   background-color: #f0f0f0;
   border-radius: 0.5rem;
   box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.1);
   overflow: hidden;
-  display: flex;
-  flex-wrap: nowrap;
-  margin: 0;
+
+  /* оставляем твои размеры */
+  flex: 280px;
+  min-width: 280px;
+  max-width: 280%;
+  gap: 1rem; /* расстояние между изображением и информацией */
+  padding: 1rem;
 }
 
-/* Картинка профиля */
-.profile-img-wrapper {
-  flex: 1 1 60%;
-  max-width: 60%;
-  position: relative;
-  background-color: transparent;
-  padding-left: 1rem;
-  padding-right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
 .profile-img-container {
   position: relative;
   width: 100%;
+  max-width: 300px; /* чтобы ограничить ширину */
+  aspect-ratio: 1 / 1; /* квадрат */
+  border-radius: 0.5rem;
+  overflow: hidden;
+  flex-shrink: 0;
+  background-color: #ddd;
 }
 
 .profile-img-wrapper img {
   width: 100%;
-  max-width: 300px;
-  height: auto;
-  aspect-ratio: 1 / 1;
+  height: 100%;
   object-fit: cover;
   border-radius: 0.5rem;
   user-select: none;
   display: block;
 }
 
-/* Иконка загрузки фото */
 .upload-icon-label {
   position: absolute;
   top: 10px;
-  right:70px;
+  right: 10px;
   z-index: 2;
   background-color: rgba(255,255,255,0.8);
   border-radius: 50%;
@@ -70,14 +64,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.profile-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.5rem;
 }
 
 .upload-icon-label:hover {
@@ -94,7 +80,15 @@
   display: none;
 }
 
-/* Внутренние данные профиля */
+.profile-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
 .profile-meta {
   font-size: 0.95rem;
   color: #555;
@@ -107,6 +101,7 @@
   font-weight: 500;
   font-size: 0.85rem;
 }
+
 
 /* Карусель для статей блога */
 .articles-carousel {
@@ -161,6 +156,17 @@
   gap: 2rem;
   max-width: calc(280px * 4 + 2rem * 3);
   margin: 0 auto;
+}
+.category-card {
+  display: flex;
+  flex-direction: column;
+  background-color: #f0f0f0;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1); /* размытие как у profile-card */
+  overflow: hidden;
+  padding: 1rem 1rem 2rem; /* верх и боковые отступы оставлены, низ чуть больше */
+  gap: 0.2rem; /* меньшее расстояние между элементами */
+  margin-bottom: 20px;
 }
 
 .product-card {
@@ -377,6 +383,7 @@
 }
 </style>
 
+
 <!-- Шапка -->
 <div class="text-center mb-4">
   <h1 class="display-4">Мой профиль</h1>
@@ -392,7 +399,8 @@
     <div class="profile-img-wrapper">
       <div class="profile-img-container">
         {% if user.avatar %}
-          <img src="{{ user.avatar.url }}" alt="Фото профиля {{ user.get_full_name|default:user.username }}" class="profile-img">
+      <img src="{{ user.avatar.url }}" alt="Фото профиля {{ user.get_full_name|default:user.email }}" class="profile-img">
+
         {% else %}
           <img src="{{ MEDIA_URL }}products/no-image.png" alt="Изображение отсутствует" class="profile-img">
         {% endif %}
@@ -495,7 +503,9 @@
 <div class="user-products-card">
   {% for category, products in products_by_category.items %}
     <div class="category-card" style="background-color: #f0f0f0; padding: 20px; margin-bottom: 25px; border-radius: 10px;">
-      <h3 style="margin-bottom: 8px; padding-left: 25px;">{{ category.name }}</h3>
+<h3 style="margin-bottom: 8px; padding-left: 25px; color: #666;">{{ category.name }}</h3>
+
+
       <hr style="border: none; border-top: 2px solid #ccc; margin: 15px 0;">
       <div class="products-list">
         {% if products %}

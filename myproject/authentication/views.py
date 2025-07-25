@@ -17,32 +17,36 @@ User = get_user_model()
 
 
 def get_user_profile_context(user):
-    products = Product.objects.filter(author=user).select_related('category').order_by('category__name', 'name')
-    categories = Category.objects.all().order_by('name')
+    products = Product.objects.filter(author=user).select_related('category')
+    categories = Category.objects.all().order_by('name')  # Берем все категории
 
+    # Создаем словарь: категория → список товаров (пустой по умолчанию)
     products_by_category = {category: [] for category in categories}
-
     for product in products:
         products_by_category[product.category].append(product)
 
+    blog_posts_qs = BlogPost.objects.filter(author=user, is_published=True).order_by('-created_at')
+
     return {
         'user': user,
-        'products_by_category': products_by_category,
+        'products_by_category': products_by_category,  # Содержит и пустые категории
         'product_count': products.count(),
-        'article_count': BlogPost.objects.filter(author=user).count(),
-        'blog_posts': BlogPost.objects.filter(author=user, is_published=True).order_by('-created_at'),
+        'article_count': blog_posts_qs.count(),
+        'blog_posts': blog_posts_qs,
         'MEDIA_URL': settings.MEDIA_URL,
     }
+
+
 
 class AuthCreateView(CreateView):
     form_class = AuthForm
     template_name = 'authentication/auth_create.html'
 
     def form_valid(self, form):
-        response = super().form_valid(form)  # сохраняет пользователя
-        user = self.object  # только что созданный пользователь
-        login(self.request, user)  # логиним пользователя
-        self.send_welcome_email(user.email)  # отправляем письмо
+        response = super().form_valid(form)
+        user = self.object
+        login(self.request, user)
+        self.send_welcome_email(user.email)
         return response
 
     def get_success_url(self):

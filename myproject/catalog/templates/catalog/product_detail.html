@@ -3,160 +3,298 @@
 {% load static %}
 {% block content %}
 <style>
-.btn-custom {
-  color: #9370DB;
-  border: 2px solid #9370DB;
-  background-color: transparent;
-  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-  border-radius: 10px;
-  padding: 0.6rem 2.5rem;
+  /* Ваш CSS без изменений */
+  .btn-custom {
+    color: #9370DB;
+    border: 2px solid #9370DB;
+    background-color: transparent;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    border-radius: 10px;
+    padding: 0.6rem 2.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    user-select: none;
+    box-shadow: 0 2px 5px rgba(147, 112, 219, 0.2);
+  }
+
+  .btn-custom:hover,
+  .btn-custom:focus {
+    background-color: #9370DB;
+    color: white;
+    text-decoration: none;
+    outline: none;
+    box-shadow: 0 4px 12px rgba(147, 112, 219, 0.5);
+    transform: scale(1.05);
+  }
+
+  .btn-custom:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 5px rgba(147, 112, 219, 0.3);
+  }
+
+  #deleteModal .modal-content {
+    text-align: center;
+  }
+
+  #deleteModal .btn-close {
+    display: none;
+  }
+/* Стилизация модального окна */
+.modal-content {
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  padding: 30px 25px;
+  background: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* Заголовок модалки */
+.modal-content h5 {
   font-weight: 600;
-  font-size: 1.1rem;
-  cursor: pointer;
-  display: inline-block;
-  text-decoration: none;
-  user-select: none;
-  box-shadow: 0 2px 5px rgba(147, 112, 219, 0.2);
-}
-
-.btn-custom:hover,
-.btn-custom:focus {
-  background-color: #9370DB;
-  color: white;
-  text-decoration: none;
-  outline: none;
-  box-shadow: 0 4px 12px rgba(147, 112, 219, 0.5);
-  transform: scale(1.05);
-}
-
-.btn-custom:active {
-  transform: scale(0.98);
-  box-shadow: 0 2px 5px rgba(147, 112, 219, 0.3);
-}
-
-
-  /* Центрируем весь текст внутри модального окна */
-#deleteModal .modal-content {
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+  color: #222;
   text-align: center;
 }
 
-/* Убираем крестик (кнопку закрытия) */
-#deleteModal .btn-close {
-  display: none;
+/* Текст внутри модалки */
+.modal-content p {
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+  text-align: center;
+  color: #555;
 }
 
-/* Мягкий красный для кнопки "Удалить" */
+/* Кнопки в модалке */
+.modal-content .btn {
+  min-width: 140px;
+  font-weight: 600;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+/* Стили для мягкой красной кнопки (удаление) */
 .btn-danger-soft {
   color: #a94442;
   background-color: #f2dede;
-  border-color: #ebccd1;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  border: 1.5px solid #ebccd1;
 }
 
 .btn-danger-soft:hover,
 .btn-danger-soft:focus {
   color: white;
-  background-color: #d9534f; /* чуть ярче при наведении */
+  background-color: #d9534f;
   border-color: #d43f3a;
+  box-shadow: 0 0 8px rgba(217, 83, 79, 0.6);
   outline: none;
 }
 
-/* Новый стиль для одинакового размера и обрезки изображения */
-.product-image {
-  width: 500px;
-  height: 500px;
-  object-fit: cover;
-  object-position: center center;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+/* Желтая кнопка — снятие с публикации */
+.btn-warning {
+  background-color: #f0ad4e;
+  color: #fff;
+  border: 1.5px solid #eea236;
 }
 
-@media (max-width: 768px) {
-  .product-image {
-    width: 100%;
-    height: auto;
-    max-height: 400px;
-  }
+.btn-warning:hover,
+.btn-warning:focus {
+  background-color: #ec971f;
+  border-color: #d58512;
+  box-shadow: 0 0 8px rgba(236, 151, 31, 0.6);
+  outline: none;
 }
+
+/* Зеленая кнопка — публикация */
+.btn-success {
+  background-color: #5cb85c;
+  color: white;
+  border: 1.5px solid #4cae4c;
+}
+
+.btn-success:hover,
+.btn-success:focus {
+  background-color: #449d44;
+  border-color: #398439;
+  box-shadow: 0 0 8px rgba(68, 157, 68, 0.6);
+  outline: none;
+}
+
+/* Серая кнопка — отмена */
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  border: 1.5px solid #6c757d;
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+  background-color: #5a6268;
+  border-color: #545b62;
+  box-shadow: 0 0 8px rgba(90, 98, 104, 0.6);
+  outline: none;
+}
+
+/* Отступы между кнопками */
+.modal-content .btn + .btn {
+  margin-left: 12px;
+}
+
+/* Центрируем кнопки */
+.modal-content form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+  .product-image {
+    width: 500px;
+    height: 500px;
+    object-fit: cover;
+    object-position: center center;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  @media (max-width: 768px) {
+    .product-image {
+      width: 100%;
+      height: auto;
+      max-height: 400px;
+    }
+  }
 
   .btn-custom-gray {
-  color: #6c757d; /* серый цвет текста */
-  border: 2px solid #6c757d; /* серый бордер */
-  background-color: transparent;
-  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-  border-radius: 10px;
-  padding: 0.6rem 2.5rem;
-  font-weight: 600;
-  font-size: 1.1rem;
-  cursor: pointer;
-  display: inline-block;
-  text-decoration: none;
-  user-select: none;
-  box-shadow: 0 2px 5px rgba(108, 117, 125, 0.2);
-}
+    color: #6c757d;
+    border: 2px solid #6c757d;
+    background-color: transparent;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    border-radius: 10px;
+    padding: 0.6rem 2.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    user-select: none;
+    box-shadow: 0 2px 5px rgba(108, 117, 125, 0.2);
+  }
 
-.btn-custom-gray:hover,
-.btn-custom-gray:focus {
-  background-color: #6c757d; /* серый фон при наведении */
-  color: white;
-  text-decoration: none;
-  outline: none;
-  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.5);
-  transform: scale(1.05);
-}
+  .btn-custom-gray:hover,
+  .btn-custom-gray:focus {
+    background-color: #6c757d;
+    color: white;
+    text-decoration: none;
+    outline: none;
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.5);
+    transform: scale(1.05);
+  }
 </style>
 
 <div class="container py-4">
   <div class="row">
-    <!-- Левая колонка: изображение -->
     <div class="col-md-6 mb-4">
-          {% if product.image %}
-              <img src="{{ product.image.url }}" alt="{{ product.name }}" class="card-img-top">
-          {% else %}
-              <img src="{{ MEDIA_URL }}products/no-image.png" alt="Изображение отсутствует" class="card-img-top">
-          {% endif %}
+      {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="card-img-top product-image">
+      {% else %}
+        <img src="{{ MEDIA_URL }}products/no-image.png" alt="Изображение отсутствует" class="card-img-top product-image">
+      {% endif %}
     </div>
-
-    <!-- Правая колонка: текст -->
     <div class="col-md-6">
       <h1 class="mb-4">{{ product.name }}</h1>
       <p>{{ product.description|safe }}</p>
       <p class="fs-3"><strong>Цена:</strong> ${{ product.price }}</p>
     </div>
   </div>
-
-<!-- Кнопки "Назад" слева, остальные справа -->
 <div class="row mt-4">
   <div class="col-md-6 d-flex justify-content-start">
     <a href="{% url 'catalog:home' %}" class="btn btn-lg btn-custom">Назад к каталогу</a>
   </div>
-{% if user.is_authenticated and user == product.author %}
-    <div class="col-md-6 ">
-  <a href="{% url 'catalog:product_update' product.pk %}" style="margin-right: 10px;" class="btn-custom-gray ">Редактировать</a>
-  <button type="button" class="btn-custom-gray" data-bs-toggle="modal" data-bs-target="#deleteModal">
-        Удалить
-      </button>
+
+  {% if user.is_authenticated %}
+    <div class="col-md-6 d-flex justify-content-end align-items-center">
+
+      {% if is_author %}
+        <a href="{% url 'catalog:product_update' product.pk %}" style="margin-right: 10px;" class="btn-custom-gray">Редактировать</a>
+        <button type="button" style="margin-right: 10px;" class="btn-custom-gray" data-bs-toggle="modal" data-bs-target="#deleteModal">Удалить</button>
+      {% endif %}
+
+      {% if is_moderator %}
+        {% if product.is_published %}
+          <button type="button" style="margin-right: 10px; white-space: nowrap;" class="btn-custom-gray no-wrap" data-bs-toggle="modal" data-bs-target="#unpublishModal">
+            Снять с публикации
+          </button>
+        {% else %}
+          <button type="button" style="margin-right: 10px; white-space: nowrap;" class="btn-custom-gray no-wrap" data-bs-toggle="modal" data-bs-target="#publishModal">
+            Опубликовать
+          </button>
+        {% endif %}
+        {% if not is_author %}
+          <!-- Если пользователь только модератор, показываем кнопку удалить отдельно -->
+          <button type="button" style="margin-right: 10px;" class="btn-custom-gray" data-bs-toggle="modal" data-bs-target="#deleteModal">Удалить</button>
+        {% endif %}
+      {% endif %}
+    </div>
   {% endif %}
 </div>
+</div>
 
-
-<!-- Модальное окно подтверждения удаления -->
+<!-- Модальное окно для удаления -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content p-4">
-      <h5 class="modal-title mb-3" id="deleteModalLabel">Подтверждение удаления</h5>
-      <p class="mb-4">Вы уверены, что хотите удалить эту карточку товара?</p>
-      <div class="d-flex justify-content-center gap-3">
+      <h5 id="deleteModalLabel" class="mb-3">Подтвердите удаление</h5>
+      <p>Вы уверены, что хотите удалить товар "{{ product.name }}"?</p>
+      <form method="post" action="{% url 'catalog:product_delete' product.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger btn-danger-soft me-2">Удалить</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-<form action="{% url 'catalog:product_delete' product.pk %}" method="post" style="display:inline;">
-
-          {% csrf_token %}
-          <button type="submit" class="btn btn-danger-soft">Удалить</button>
-        </form>
-      </div>
+      </form>
     </div>
   </div>
 </div>
 
-{% endblock %}
+<!-- Модальное окно для снятия с публикации -->
+<div class="modal fade" id="unpublishModal" tabindex="-1" aria-labelledby="unpublishModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-4">
+      <h5 id="unpublishModalLabel" class="mb-3">Подтвердите снятие с публикации</h5>
+      <p>Вы уверены, что хотите снять товар "{{ product.name }}" с публикации?</p>
+      <form method="post" action="{% url 'catalog:product_unpublish' product.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-warning me-2">Снять с публикации</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+      </form>
+    </div>
+  </div>
+</div>
 
+<!-- Модальное окно для публикации -->
+<div class="modal fade" id="publishModal" tabindex="-1" aria-labelledby="publishModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-4">
+      <h5 id="publishModalLabel" class="mb-3">Подтвердите публикацию</h5>
+      <p>Вы уверены, что хотите опубликовать товар "{{ product.name }}"?</p>
+      <form method="post" action="{% url 'catalog:product_publish' product.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success me-2">Опубликовать</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Когда модальное окно закрывается, убираем фокус с кнопок
+  document.querySelectorAll('.modal').forEach(modal => {
+    modal.addEventListener('hidden.bs.modal', () => {
+      document.querySelectorAll('[data-bs-toggle="modal"]').forEach(btn => btn.blur());
+    });
+  });
+</script>
+{% endblock %}

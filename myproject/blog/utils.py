@@ -1,6 +1,7 @@
-from PIL import Image
 from io import BytesIO
-from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from PIL import Image
+import sys
 
 def resize_image(image_field):
     target_ratio = 2
@@ -27,4 +28,19 @@ def resize_image(image_field):
 
     buffer = BytesIO()
     img_cropped.save(buffer, format=img.format)
-    return ContentFile(buffer.getvalue(), name=image_field.name)
+    buffer.seek(0)
+
+    # Имя файла — обязательно с расширением
+    filename = image_field.name
+    if not filename.lower().endswith(f".{img.format.lower()}"):
+        filename = f"{filename.rsplit('.', 1)[0]}.{img.format.lower()}"
+
+    return InMemoryUploadedFile(
+        buffer,                     # file
+        None,                       # field_name
+        filename,                   # file name
+        f"image/{img.format.lower()}",  # content_type
+        sys.getsizeof(buffer),      # size
+        None                       # charset
+    )
+

@@ -92,33 +92,33 @@
       <div class="col-lg-10">
         <div class="article-card">
 
-          <form method="post" enctype="multipart/form-data" autocomplete="off">
-            {% csrf_token %}
+         <form method="post" enctype="multipart/form-data" autocomplete="off">
+  {% csrf_token %}
 
-            {% for field in form.visible_fields %}
-              <div class="mb-3">
-                {{ field.label_tag }}
-                {{ field }}
+  {% for field in form.visible_fields %}
+    <div class="mb-3">
+      {{ field.label_tag }}
+      {{ field }}
 
-                {% if field.name == 'image' and form.instance.image %}
-                  <div class="mt-1 text-muted" style="font-size: 0.9rem;">
-                    Текущий файл: {{ form.instance.image.name|cut:"products/"|default:"Файл не загружен" }}
-                  </div>
-                {% endif %}
+      {% if field.name == 'image' and form.instance.image %}
+        <div class="mt-1 text-muted" style="font-size: 0.9rem;">
+          Текущий файл: {{ form.instance.image.name|cut:"products/"|default:"Файл не загружен" }}
+        </div>
+      {% endif %}
 
-                {% if field.errors %}
-                  <div class="text-danger">{{ field.errors }}</div>
-                {% endif %}
-              </div>
-            {% endfor %}
+      {% if field.errors %}
+        <div class="text-danger">{{ field.errors }}</div>
+      {% endif %}
+    </div>
+  {% endfor %}
 
-            {% if user.is_authenticated and user == form.instance.author %}
-              <div class="mt-4 d-flex justify-content-center">
-                <button type="submit" class="btn btn-lg btn-custom">Сохранить</button>
-              </div>
-            {% endif %}
+  {% if user.is_authenticated and user == form.instance.author %}
+    <div class="mt-4 d-flex justify-content-center flex-column align-items-center">
+      <button type="submit" class="btn btn-lg btn-custom mb-2">Сохранить</button>
+    </div>
+  {% endif %}
+</form>
 
-          </form>
 
         </div>
       </div>

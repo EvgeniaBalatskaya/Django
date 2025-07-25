@@ -24,6 +24,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
+    is_published = models.BooleanField(default=True)
 
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -37,10 +38,13 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
+        permissions = [
+            ("can_publish_product", "Может публиковать продукт"),
+            ("can_unpublish_product", "Может снимать с публикации продукта"),
+        ]
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
         return reverse('catalog:product_detail', kwargs={'pk': self.pk})
-
