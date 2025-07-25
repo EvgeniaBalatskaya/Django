@@ -37,18 +37,20 @@ class BlogForm(forms.ModelForm):
         }
 
     def clean_title(self):
-        title = self.cleaned_data.get('title', '').lower()
+        title = self.cleaned_data.get('title', '')
+        lower_title = title.lower()
         for word in FORBIDDEN_WORDS:
-            if word in title:
+            if word in lower_title:
                 raise forms.ValidationError(f'Слово "{word}" запрещено использовать в заголовке.')
-        return title
+        return title  # возвращаем исходный текст без lower()
 
     def clean_content(self):
-        content = self.cleaned_data.get('content', '').lower()
+        content = self.cleaned_data.get('content', '')
+        lower_content = content.lower()
         for word in FORBIDDEN_WORDS:
-            if word in content:
+            if word in lower_content:
                 raise forms.ValidationError(f'Слово "{word}" запрещено использовать в содержимом статьи.')
-        return content
+        return content  # возвращаем исходный текст без lower()
 
     def save(self, commit=True):
         instance = super().save(commit=False)

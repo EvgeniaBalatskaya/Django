@@ -10,10 +10,22 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'price', 'category', 'author')
-    list_filter = ('category', 'author')
+    list_display = ('id', 'name', 'price', 'category', 'author', 'is_published')
+    list_filter = ('category', 'author', 'is_published')
     search_fields = ('name', 'description')
-    fields = ('name', 'description', 'price', 'category', 'author')
+    fields = ('name', 'description', 'price', 'category', 'author', 'is_published')
+
+    actions = ['publish_products', 'unpublish_products']
+
+    def publish_products(self, request, queryset):
+        updated = queryset.update(is_published=True)
+        self.message_user(request, f"{updated} продукт(ов) опубликовано.")
+    publish_products.short_description = "Опубликовать выбранные продукты"
+
+    def unpublish_products(self, request, queryset):
+        updated = queryset.update(is_published=False)
+        self.message_user(request, f"{updated} продукт(ов) снято с публикации.")
+    unpublish_products.short_description = "Снять с публикации выбранные продукты"
 
     def save_model(self, request, obj, form, change):
         if not change and not obj.author:
