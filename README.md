@@ -16,8 +16,8 @@
 ## Установка и запуск
 
 ### 1. Клонируй репозиторий
-git clone https://github.com/твой-профиль/имя-репозитория.git
-cd имя-репозитория
+git clone https://github.com/EvgeniaBalatskaya/Django.git
+cd myproject
 
 ### 2. Создай виртуальное окружение и активируй его
 powershell
